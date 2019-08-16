@@ -1,3 +1,5 @@
+import os
+import sys
 import time
 # from flask import Flask
 import urllib
@@ -81,4 +83,6 @@ def run_crawler():
     logger.info("-------------------------------------")
 
 if __name__ == "__main__":
+    with open("test.txt", 'w') as f:
+        f.write("Tesk ok. {}".format(os.getcwd()))
     run_crawler()
