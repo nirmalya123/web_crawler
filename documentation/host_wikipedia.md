@@ -1,0 +1,167 @@
+Host Wikipedia Locally
+======================
+
+#### Prerequisite
+Sufficient HDD space. The downloaded dump file is nearly 16GB. After uncompressing it is approximately 70GB.
+
+## There are two main parts-
+1. How to get the article pages in the Wikipedia.
+2. How to host it.
+
+How to get the article pages in the Wikipedia
+---------------------------------------------
+
+Wikipedia shares free copies of all available content to interested users. These databases can be used for offline and personal use. (Ref. https://en.wikipedia.org/wiki/Wikipedia:Database_download)
+
+#### Useful links
+1. It provides useful links for Wikimedia - https://dumps.wikimedia.org/
+2. Useful infomation about working with the dump - https://meta.wikimedia.org/wiki/Data_dumps
+
+#### Download the dump
+1. Got to https://dumps.wikimedia.org/enwiki/latest/ (Ref. https://en.wikipedia.org/wiki/Wikipedia:Database_download#English-language_Wikipedia)
+
+2. Download [enwiki-latest-pages-articles.xml.bz2](http://dumps.wikimedia.org/enwiki/latest/enwiki-latest-pages-articles.xml.bz2).
+Use a download manager. The file more than 16GB. There are other versions as well. One can download as per their need. As the name suggests this file is for English language and is latest [multistream](https://en.wikipedia.org/wiki/Wikipedia:Database_download#Should_I_get_multistream? "Wikipedia - Should I get multistream?") as on the date.
+
+3. Extract the zip file in a folder.
+
+
+Host the Wikipedia
+------------------
+[Mediawiki](https://www.mediawiki.org/wiki/MediaWiki "Mediawiki Website") is used to host the wikipedia. It is also the popular one.
+
+I decided to user Docker containers. It would help me to keep my workstation clean and modular. (Ref. https://www.mediawiki.org/wiki/Docker)
+
+
+### Setup mediawiki docker
+
+**Setup docker**
+
+Very good initial and overall guide for docker - https://docs.docker.com/get-started/.
+You may also refer to [this](https://www.digitalocean.com/community/tutorials/how-to-install-docker-compose-on-ubuntu-18-04).
+
+**Docker compose file**
+
+1. Refer to my docker compose file [here](https://github.com/nirmalya123/web_crawler/blob/master/host_wiki/stack.yml "Github link") . Also refer to https://hub.docker.com/_/mediawiki as well. My folder structure is as below-
+```
+└── host_wiki
+	├── LocalSettings.php
+	└── stack.yml
+```
+Initially the `LocalSettings.php` file will not be there. It would be available after the setup is complete.
+> Comment the line `- ./LocalSettings.php:/var/www/html/LocalSettings.php` for initial run.
+
+2. The unzipped dump file was placed at `/media/nirmad/New Volume/wikipedia_offline/mediawiki_store`. I used an external HDD for it. Also created `/media/nirmad/New Volume/wikipedia_offline/db` for the database.
+
+I faced some inconsitent issue while using `mysql` image hence sticked to the `mariadb`. The `mysql` container was not able to run consistently.
+> Also note the `MYSQL_ROOT_PASSWORD` set here. It would be needed at the time of setting up the database for Mediawiki.
+
+3. Now initialize the docker swarm
+
+```
+sudo docker swarm init
+```
+
+Sample output-
+```
+Swarm initialized: current node (8pyipi9aawwzntnogkqi15f81) is now a manager.
+
+To add a worker to this swarm, run the following command:
+
+    docker swarm join --token SWMTKN-1-3g21ufuxnu2lecxrmor83qp7hj6xijrptqlcj7ppa9jbca5g54-4va1u9f734m65a62lk0n8ooa3 192.168.1.3:2377
+
+To add a manager to this swarm, run 'docker swarm join-token manager' and follow the instructions.
+```
+
+4. Initialize the stack
+```
+sudo docker stack deploy -c stack.yml mediawiki
+```
+
+Smple output-
+```
+Ignoring unsupported options: links, restart
+
+Creating network mediawiki_default
+Creating service mediawiki_mediawiki
+Creating service mediawiki_database
+```
+
+5. Some useful diagnostic to check
+
+Check the stack status-
+```
+sudo docker stack ls
+```
+Output-
+```
+NAME                SERVICES            ORCHESTRATOR
+mediawiki           2                   Swarm
+```
+Check the mediawiki task-
+
+```
+sudo docker stack services mediawiki
+```
+Output-
+```
+ID                  NAME                  MODE                REPLICAS            IMAGE               PORTS
+xv81zw80gdlx        mediawiki_mediawiki   replicated          1/1                 mediawiki:latest    *:8080->80/tcp
+yo14p4fco3qz        mediawiki_database    replicated          1/1                 mariadb:latest
+```
+Check the container details-
+```
+sudo docker container ls
+```
+Output-
+```
+CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS               NAMES
+868320e8a647        mariadb:latest      "docker-entrypoint.s…"   13 seconds ago      Up 10 seconds       3306/tcp            mediawiki_database.1.umodg2menj31gcfuoaznr5k
+fe76b0a3a594        mediawiki:latest    "docker-php-entrypoi…"   34 seconds ago      Up 31 seconds       80/tcp              mediawiki_mediawiki.1.w9dzwjf8b90sbcsm4k5p295
+```
+Also inspect the tasks. (You may note down the IP addresses.)
+```
+sudo docker inspect mediawiki_database
+sudo docker inspect mediawiki_mediawiki
+```
+
+If anything goes as not expected you may use these commands.
+| Purpose | Command |
+| ------------- |-------------|
+| Tear down the application | `sudo docker stack rm mediawiki` |
+| Remove the swarm | `sudo docker swarm leave --force`|
+| Remove all containers | `sudo docker container prune` |
+| Remove all docker networking | `sudo docker network prune` |
+
+**Setup Mediawiki and the database**
+1. Once the contianers are up open http://localhost:8080 in a browser. If any specific IP-address was used in the `swarm init` then use that one.
+
+
+**Import the dump in Mediawiki**
+1. Login to the Mediawiki continer
+```
+sudo docker exec  -it fe76b0a3a594 bash
+```
+The prompt will be `root@fe76b0a3a594:/var/www/html#`
+
+2. Import
+```
+php maintenance/importDump.php images/enwiki-latest-pages-articles-multistream.xml
+```
+Sample output-
+```
+100 (0.73 pages/sec 0.73 revs/sec)
+200 (0.62 pages/sec 0.62 revs/sec)
+300 (0.55 pages/sec 0.55 revs/sec)
+400 (0.54 pages/sec 0.54 revs/sec)
+500 (0.52 pages/sec 0.52 revs/sec)
+600 (0.52 pages/sec 0.52 revs/sec)
+700 (0.53 pages/sec 0.53 revs/sec)
+800 (0.52 pages/sec 0.52 revs/sec)
+900 (0.51 pages/sec 0.51 revs/sec)
+1000 (0.51 pages/sec 0.51 revs/sec)
+...
+```
+
+3. While the import is in progress you can access http://localhost:8080/index.php/Special:Random to see if any wikipedia content is visible.
+It is a very lenghty process.
