@@ -13,9 +13,10 @@ To scale up the crawler programme I felt not to use the wikipedia.org's servers.
 So I have to host a local wikipedia.
 
 I will break down the documentation in two parts-
-1. [Host Wikipedia locally](host_wikipedia.md "Host Wikipedia locally").
+1. [Host Wikipedia locally](https://github.com/nirmalya123/web_crawler/blob/master/documentation/Host_wikipedia.md "Host Wikipedia locally").
+
 2. [About the web-crawler application](web_crawler_implementation.md "Web-crawler application").
 
-**Linux(Ubuntu 18 LTS) is used for the work.**
+>**Linux(Ubuntu 18 LTS) is used for the work.**
 
 These will be incremental documentation. So there would be further updates.

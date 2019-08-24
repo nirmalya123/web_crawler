@@ -35,12 +35,12 @@ I decided to user Docker containers. It would help me to keep my workstation cle
 
 ### Setup mediawiki docker
 
-**Setup docker**
+#### Setup docker
 
 Very good initial and overall guide for docker - https://docs.docker.com/get-started/.
 You may also refer to [this](https://www.digitalocean.com/community/tutorials/how-to-install-docker-compose-on-ubuntu-18-04).
 
-**Docker compose file**
+#### Docker compose file
 
 1. Refer to my docker compose file [here](https://github.com/nirmalya123/web_crawler/blob/master/host_wiki/stack.yml "Github link") . Also refer to https://hub.docker.com/_/mediawiki as well. My folder structure is as below-
 ```
@@ -133,11 +133,72 @@ If anything goes as not expected you may use these commands.
 | Remove all containers | `sudo docker container prune` |
 | Remove all docker networking | `sudo docker network prune` |
 
-**Setup Mediawiki and the database**
-1. Once the contianers are up open http://localhost:8080 in a browser. If any specific IP-address was used in the `swarm init` then use that one.
+#### Setup Mediawiki and the database
 
+Once the contianers are up open http://localhost:8080 in a browser. If any specific IP-address was used in the `swarm init` then use that one.
 
-**Import the dump in Mediawiki**
+Configuration pages and steps are as below-
+
+1. **Page 1** Just continue.
+
+![Alt text](https://github.com/nirmalya123/web_crawler/blob/master/documentation/mediawiki_install_page1.jpg?raw=true "Mediawiki installation - Page 1")
+
+2. **Page 2** If the below text is visible then continue.
+> The environment has been checked. You can install MediaWiki
+
+![Alt text](https://github.com/nirmalya123/web_crawler/blob/master/documentation/mediawiki_install_page2.jpg?raw=true "Mediawiki installation - Page 2")
+
+3. **Page 3** This page is important.
+- Database type should be `MariaDB` here.
+- Datebase host should be the **_service name_** as in the docker-compose file. It should not be _localhost_. The container are running inside swam and each containers will be assigned different IP addresses as per the docker networking components.
+- Database password should be the one specified in the docker-compose file.
+- Rest of the fields should not be altered.
+
+![Alt text](https://github.com/nirmalya123/web_crawler/blob/master/documentation/mediawiki_install_page3.jpg?raw=true "Mediawiki installation - Page 3")
+
+4. **Page 4** Just continue.
+
+![Alt text](https://github.com/nirmalya123/web_crawler/blob/master/documentation/mediawiki_install_page4.jpg?raw=true "Mediawiki installation - Page 4")
+
+5. **Page 5** Specify the `Name of wiki`, `Username` and `Password`. You may complete the isntalltion here or can configure further.
+
+![Alt text](https://github.com/nirmalya123/web_crawler/blob/master/documentation/mediawiki_install_page5.jpg?raw=true "Mediawiki installation - Page 5")
+
+6. **Page 6** Configure and continue. In my case nothing was altered.
+
+![Alt text](https://github.com/nirmalya123/web_crawler/blob/master/documentation/mediawiki_install_page6.jpg?raw=true "Mediawiki installation - Page 6")
+
+7. **Page 7** Just continue.
+
+![Alt text](https://github.com/nirmalya123/web_crawler/blob/master/documentation/mediawiki_install_page7.jpg?raw=true "Mediawiki installation - Page 7")
+
+8. **Page 8** Check if all the points are showing **Done**. Else restart installtion.
+
+![Alt text](https://github.com/nirmalya123/web_crawler/blob/master/documentation/mediawiki_install_page8.jpg?raw=true "Mediawiki installation - Page 8")
+
+9. **Page 9** It would show `Complete!`.
+> Make sure to donwload the `LocalSettings.php` file. To the same location of the docker-compose file.
+
+![Alt text](https://github.com/nirmalya123/web_crawler/blob/master/documentation/mediawiki_install_page9.jpg?raw=true "Mediawiki installation - Page 9")
+
+**Restart the containers**
+Run the below commands
+1. Teardown the run environment
+```
+sudo docker stack rm mediawiki
+sudo docker swarm leave --force
+```
+
+2. Uncomment the line `- ./LocalSettings.php:/var/www/html/LocalSettings.php` in the dokcer-compose file and save.
+
+3. Start the enviroment
+```
+sudo docker swarm init
+sudo docker stack deploy -c stack.yml mediawiki
+```
+
+#### Import the dump in Mediawiki
+
 1. Login to the Mediawiki continer
 ```
 sudo docker exec  -it fe76b0a3a594 bash
@@ -164,4 +225,6 @@ Sample output-
 ```
 
 3. While the import is in progress you can access http://localhost:8080/index.php/Special:Random to see if any wikipedia content is visible.
+Sample-
+![Alt text](https://github.com/nirmalya123/web_crawler/blob/master/documentation/mediawikI_page.jpg?raw=true "MediaWiki Special:Random")
 It is a very lenghty process.
