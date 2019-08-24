@@ -12,14 +12,20 @@ import requests
 
 from logger import logger
 
-
-start_url = "https://en.wikipedia.org/wiki/Special:Random"
-target_url = "https://en.wikipedia.org/wiki/Philosophy"
+if True:
+    start_url = "http://localhost:8080/index.php/Special:Random"
+    target_url = "http://localhost:8080/index.php/Philosophy"
+    site_url = "http://localhost:8080/"
+else:
+    start_url = "https://en.wikipedia.org/wiki/Special:Random"
+    target_url = "https://en.wikipedia.org/wiki/Philosophy"
+    site_url = "https://en.wikipedia.org/"
 
 
 def find_first_link(url):
     response = requests.get(url)
     html = response.text
+    logger.debug(">>>>>> {}".format(response.url))
     soup = bs4.BeautifulSoup(html, "html.parser")
 
     # This div contains the article's body
@@ -45,7 +51,7 @@ def find_first_link(url):
         return
 
     # Build a full url from the relative article_link url
-    first_link = urllib.parse.urljoin('https://en.wikipedia.org/', article_link)
+    first_link = urllib.parse.urljoin(site_url, article_link)
 
     return first_link
 
