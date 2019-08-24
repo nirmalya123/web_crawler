@@ -226,5 +226,5 @@ Sample output-
 
 3. While the import is in progress you can access http://localhost:8080/index.php/Special:Random to see if any wikipedia content is visible.
 Sample-
-![Alt text](https://github.com/nirmalya123/web_crawler/blob/master/documentation/mediawikI_page.jpg?raw=true "MediaWiki Special:Random")
+![Alt text](https://github.com/nirmalya123/web_crawler/blob/master/documentation/mediawiki_page.jpg?raw=true "MediaWiki Special:Random")
 It is a very lenghty process.
