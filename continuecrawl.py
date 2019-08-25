@@ -12,10 +12,25 @@ import requests
 
 from logger import logger
 
+# http://localhost:8080/wikipedia_en_simple_all_nopic/A/
+# http://localhost:8080/random?content=wikipedia_en_simple_all_nopic
+#                      /random?content=wikipedia_en_simple_all_nopic
+wikiname = "wikipedia_en_all_nopic"
 if True:
-    start_url = "http://localhost:8080/index.php/Special:Random"
-    target_url = "http://localhost:8080/index.php/Philosophy"
-    site_url = "http://localhost:8080/"
+    # start_url = "http://localhost:8080/index.php/Special:Random"
+    # target_url = "http://localhost:8080/index.php/Philosophy"
+    # site_url = "http://localhost:8080/"
+    start_url = "http://localhost:8080/random?content={}".format(wikiname)
+    target_url = [
+        # "http://localhost:8080/{}/A/Communication.html".format(wikiname),
+        # "http://localhost:8080/{}/A/Philosophy.html".format(wikiname),
+        # "http://localhost:8080/{}/A/Psychology.html".format(wikiname),
+        # "http://localhost:8080/{}/A/Science.html".format(wikiname),
+        # "http://localhost:8080/{}/A/Country.html".format(wikiname),
+        # "http://localhost:8080/{}/A/Language.html".format(wikiname),
+        ]
+
+    site_url = "http://localhost:8080/{}/A/".format(wikiname)
 else:
     start_url = "https://en.wikipedia.org/wiki/Special:Random"
     target_url = "https://en.wikipedia.org/wiki/Philosophy"
@@ -30,14 +45,19 @@ def find_first_link(url):
 
     # This div contains the article's body
     # (June 2017 Note: Body nested in two div tags)
-    content_div = soup.find(id="mw-content-text").find(class_="mw-parser-output")
+    # content_div = soup.find(id="mw-content-text").find(class_="mw-parser-output")
+    # content_div = soup.find(id="mw-content-text")  # [ND]
+    content_div = soup.find("div", {"class": "mw-content-text"})
+    logger.debug("{}".format(content_div))
+    content_section = soup.find("section", {"data-mw-section-id": "0"})
 
     # stores the first link found in the article, if the article contains no
     # links this value will remain None
     article_link = None
 
     # Find all the direct children of content_div that are paragraphs
-    for element in content_div.find_all("p", recursive=False):
+    # for element in content_div.find_all("p", recursive=False):
+    for element in content_section.find_all("p", recursive=False):
         # Find the first anchor tag that's a direct child of a paragraph.
         # It's important to only look at direct children, because other types
         # of link, e.g. footnotes and pronunciation, could come before the
@@ -57,7 +77,7 @@ def find_first_link(url):
 
 
 def continue_crawl(search_history, target_url, max_steps=25):
-    if search_history[-1] == target_url:
+    if search_history[-1] in target_url:
         logger.info("We've found the target article!")
         return False
     elif len(search_history) > max_steps:
@@ -83,7 +103,7 @@ def run_crawler():
 
         article_chain.append(first_link)
         count = count + 1
-        time.sleep(3)  # Slow things down so as to not hammer Wikipedia's servers
+        # time.sleep(3)  # Slow things down so as to not hammer Wikipedia's servers
     logger.info("-------------------------------------")
     logger.info("| Total count {}".format(count))
     logger.info("-------------------------------------")
