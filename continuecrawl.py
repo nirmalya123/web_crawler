@@ -132,29 +132,28 @@ def run_crawler(loop_count):
 
 if __name__ == "__main__":
     time_data_dict = {}
-    main_count = 10
-    l = [1]
-    l.extend(range(2, main_count+2, 2))
-    for j in l:
+    max_thread = 100
+    total_iteration = 1000
+    thread_list = [1]
+    thread_list.extend(range(10, max_thread+2, 5))
+    for num_thread in thread_list:
         start_time = time.time()
-        total_iteration = 10
-        block_count = j
-        main_loop = total_iteration // block_count
+        url_iteration_count = total_iteration // num_thread
         threads = list()
-        for i in range(main_loop):
+        for i in range(num_thread):
             logger.debug(">>>>>>>>>>>>>>>>>")
             logger.debug(">>>>>>>>>>>>>>>>> {} <<<<<<<<<<<<<<<<<<<<".format(i))
             logger.debug(">>>>>>>>>>>>>>>>>")
-            x = threading.Thread(target=run_crawler, args=(block_count,))
+            x = threading.Thread(target=run_crawler, args=(url_iteration_count,))
             threads.append(x)
             x.start()
             # article_chain = [start_url]
 
-            # run_crawler(block_count)
+            # run_crawler(url_iteration_count)
         for index, thread in enumerate(threads):
             thread.join()
-        time_data_dict[j] = time.time() - start_time
-        logger.info("#Threads {} --- #URL {} --- Time {}".format(main_loop, block_count, time_data_dict[j]))
+        time_data_dict[num_thread] = time.time() - start_time
+        logger.info("#Threads {} --- #URL {} --- Time {}".format(num_thread, url_iteration_count, time_data_dict[num_thread]))
         # logger.info("-------------------------------------")
         # with main_dict_lock:
         #     pprint(main_dict)
