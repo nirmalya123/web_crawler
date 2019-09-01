@@ -1,6 +1,10 @@
 Host Wikipedia Locally
 ======================
 
+> **Update on 27th August 2019**
+>
+> Using the below steps importing the 70GB wiki XML-dump file was slow in the system. I seemed like it would take months to import all the articles. So I had to look for alternatives. Fortunately [kiwix](https://www.kiwix.org/en/) provided the solution that served my purpose. Details are on [this page](kiwix_steps.md).
+
 #### Prerequisite
 Sufficient HDD space. The downloaded dump file is nearly 16GB. After uncompressing it is approximately 70GB.
 
