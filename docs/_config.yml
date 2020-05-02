@@ -33,7 +33,7 @@ markdown: kramdown
 
 # Build settings
 theme: minima
-# remote_theme: nirmalya123/minima
+remote_theme: jekyll/minima
 plugins:
   - jekyll-feed
 
