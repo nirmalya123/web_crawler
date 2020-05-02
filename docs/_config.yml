@@ -1,7 +1,7 @@
-title: Your awesome title
+title: Project Title...
 author:
-  name: GitHub User
-  email: your-email@domain.com
+  name: nirmalya123
+  email: nirmalya.do@gmail.com
 description: > # this means to ignore newlines until "show_excerpts:"
   Write an awesome description for your new site here. You can edit this
   line in _config.yml. It will appear in your document head meta (for
@@ -16,14 +16,15 @@ minima:
 
   # generate social links in footer
   social_links:
-    twitter: jekyllrb
-    github:  jekyll
+    # homesite: https://nirmalya123.github.io/
+    twitter: ---
+    github:  nirmalya123
     # devto: jekyll
     # dribbble: jekyll
     # facebook: jekyll
     # flickr:   jekyll
     # instagram: jekyll
-    # linkedin: jekyll
+    linkedin: ---
     # pinterest: jekyll
     # youtube: jekyll
     # youtube_channel: UC8CXR0-3I70i1tfPg1PAE1g
