@@ -17,6 +17,8 @@
 # you will see them accessed via {{ site.title }}, {{ site.email }}, and so on.
 # You can create any custom variable you would like, and they will be accessible
 # in the templates via {{ site.myvariable }}.
+encoding: utf-8
+
 
 title: My project
 email: nirmalya123@gmail.com
@@ -31,7 +33,7 @@ github_username:  nirmalya123
 
 # Build settings
 theme: minima
-remote_theme: jekyll/minima
+# remote_theme: jekyll/minima
 plugins:
   - jekyll-feed
 
