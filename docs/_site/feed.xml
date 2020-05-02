@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2020-05-02T15:00:51+05:30</updated><id>http://localhost:4000/feed.xml</id><title type="html">My blogs</title><subtitle>This is my new blogs on github.</subtitle><entry><title type="html">My first test blog in jekyll github.</title><link href="http://localhost:4000/jekyll/update/2020/04/19/welcome-to-jekyll.html" rel="alternate" type="text/html" title="My first test blog in jekyll github." /><published>2020-04-19T19:46:16+05:30</published><updated>2020-04-19T19:46:16+05:30</updated><id>http://localhost:4000/jekyll/update/2020/04/19/welcome-to-jekyll</id><content type="html" xml:base="http://localhost:4000/jekyll/update/2020/04/19/welcome-to-jekyll.html">&lt;p&gt;Thanks for visting my &lt;em&gt;first&lt;/em&gt; &lt;strong&gt;blog&lt;/strong&gt; post.&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Test ok&lt;/code&gt;&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;Done.&lt;/p&gt;
-&lt;/blockquote&gt;</content><author><name></name></author><summary type="html">Thanks for visting my first blog post.</summary></entry></feed>
