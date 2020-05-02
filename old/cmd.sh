@@ -1,0 +1,3 @@
+sudo docker run --name=mediawiki_mysql -e MYSQL_DATABASE=wikidb -e MYSQL_USER=wikiuser -e MYSQL_PASSWORD=mysecret -e MYSQL_RANDOM_ROOT_PASSWORD=1 -v /home/nirmad/wiki:/var/lib/mysql -d mysql
+
+sudo docker run --name mediawiki_wiki --link mediawiki_mysql:mysql -p 8080:80 -e MEDIAWIKI_SERVER=http://localhost -e MEDIAWIKI_SITENAME=MyWiki -e MEDIAWIKI_LANGUAGE_CODE=en -e MEDIAWIKI_DB_TYPE=mysql -e MEDIAWIKI_DB_HOST=mediawiki_mysql -e MEDIAWIKI_DB_PORT=3306 -e MEDIAWIKI_DB_NAME=wikidb -e MEDIAWIKI_DB_USER=wikiuser -e MEDIAWIKI_DB_PASSWORD=mysecret -e MEDIAWIKI_ENABLE_UPLOADS=1 -v /home/nirmad/mwiki:/images -d mediawiki

@@ -1,0 +1,24 @@
+JX.behavior('phabricator-line-linker',function(){var
+origin=null;var
+target=null;var
+root=null;var
+highlighted=null;var
+editor_link=null;try{editor_link=JX.$('editor_link');}catch(ex){}function
+getRowNumber(th){if(th.firstChild){var
+line=th.firstChild.getAttribute('data-n');if(line){return line;}}return null;}JX.Stratcom.listen(['click','mousedown'],['phabricator-source','tag:th','tag:a'],function(e){if(!e.isNormalMouseEvent()){return;}var
+cell=e.getNode('tag:th');var
+table=e.getNode('phabricator-source');if(JX.DOM.findAbove(cell,'table')!==table){return;}var
+number=getRowNumber(cell);if(!number){return;}e.kill();if(e.getType()==='click'){return;}origin=cell;target=origin;root=table;});var
+highlight=function(e){if(!origin){return;}if(e.getNode('phabricator-source')!==root){return;}target=e.getNode('tag:th');var
+min;var
+max;if(JX.$V(origin).y<=JX.$V(target).y){min=origin;max=target;}else{min=target;max=origin;}var
+ii;if(highlighted===null){highlighted=[];var
+rows=JX.DOM.scry(root,'tr');for(ii=0;ii<rows.length;ii++){highlighted.push(rows[ii]);}}for(ii=0;ii<highlighted.length;ii++){JX.DOM.alterClass(highlighted[ii],'phabricator-source-highlight',false);}highlighted=[];min=JX.DOM.findAbove(min,'tr');max=JX.DOM.findAbove(max,'tr');var
+cursor=min;while(true){JX.DOM.alterClass(cursor,'phabricator-source-highlight',true);highlighted.push(cursor);if(cursor===max){break;}cursor=cursor.nextSibling;}};JX.Stratcom.listen('mouseover','phabricator-source',highlight);JX.Stratcom.listen('mouseup',null,function(e){if(!origin){return;}highlight(e);e.kill();var
+o=getRowNumber(origin);var
+t=getRowNumber(target);var
+uri=JX.Stratcom.getData(root).uri;var
+path;if(!uri){uri=JX.$U(window.location);path=uri.getPath();path=path.replace(/\$[\d-]+$/,'');uri.setPath(path);uri=uri.toString();}origin=null;target=null;root=null;var
+lines=(o==t?o:Math.min(o,t)+'-'+Math.max(o,t));uri=JX.$U(uri);path=uri.getPath();path=path+'$'+lines;uri=uri.setPath(path).toString();JX.History.replace(uri);if(editor_link){if(editor_link.href){var
+editdata=JX.Stratcom.getData(editor_link);editor_link.href=editdata.link_template.replace('%25l',o);}}});if(!window.location.hash.length){try{var
+anchor=JX.$('phabricator-line-linker-anchor');JX.DOM.scrollToPosition(0,JX.$V(anchor).y-60);}catch(ex){}}});
